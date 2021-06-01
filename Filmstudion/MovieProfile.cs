@@ -12,7 +12,7 @@ namespace Filmstudion.Data
     {
         public MovieProfile()
         {
-            this.CreateMap<Movie, MovieModel>();
+            this.CreateMap<Movie, MovieModel>().ReverseMap();
         }
     }
 }

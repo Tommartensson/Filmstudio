@@ -11,7 +11,7 @@ namespace Filmstudion.Repositories
         Task<IEnumerable<Movie>> Get();
         Task<Movie> GetById(int id);
         Task<Movie> Create(Movie movie);
-        Task Update(Movie movie);
-        Task Delete(int id);
+        void Delete<T>(T entity) where T : class;
+        Task<bool> SaveChangesAsync();
     }
 }

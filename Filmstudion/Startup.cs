@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace Filmstudion
 {
@@ -30,9 +31,9 @@ namespace Filmstudion
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("Filmstudion"));
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddControllers();
             services.AddScoped<IMovieRepository, MovieRepository>();
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
