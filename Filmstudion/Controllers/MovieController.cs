@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Filmstudion.Entities;
 using Filmstudion.Models;
 using Filmstudion.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +18,11 @@ namespace Filmstudion.Controllers
     {
         private readonly IMovieRepository _repository;
         private readonly IMapper _mapper;
+        private readonly LinkGenerator _Link;
 
-            public MovieController(IMovieRepository repository, IMapper mapper)
+            public MovieController(IMovieRepository repository, IMapper mapper, LinkGenerator link)
         {
+            _Link = link;
             _mapper = mapper;
             _repository = repository;
         }
@@ -27,12 +31,15 @@ namespace Filmstudion.Controllers
         public async Task<ActionResult<IEnumerable<string>>> Get()
         {
 
-            try
-            {
+           try
+            { 
                 var results = _repository.Get();
-                MovieModel[] models = _mapper.Map<MovieModel[]>(results);
-                return Ok(models);
-            }
+
+            
+
+
+                return Ok(results);
+           }
             catch
             {
                 return BadRequest("DataBase Failure");
@@ -43,25 +50,87 @@ namespace Filmstudion.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            try
+            {
+                var result = _repository.GetById(id);
+
+                if (result == null) return NotFound();
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest("DataBase Failure");
+            }
+           
         }
 
         // Api/Movie Post
         [HttpPost]
-        public void Post([FromBody] string movie)
+        public async Task<ActionResult<MovieModel>> Post([FromBody] MovieModel model)
         {
+            try
+            {
+                var location = _Link.GetPathByAction("Get", "Movie", new { name = model.name });
+                if (string.IsNullOrWhiteSpace(location))
+                {
+                    return BadRequest("Couldnt use current name");
+                }
+                var movie = _mapper.Map<Movie>(model);
+                await _repository.Create(movie);
+                return Created("", _mapper.Map<MovieModel>(movie));
+            }
+            catch
+            {
+                return BadRequest("DataBase Failure");
+            }
         }
 
         // Api/Movie/{id} Put/Patch
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string movie)
+        public async Task<ActionResult<MovieModel>> Put(int id, [FromBody] MovieModel movie)
         {
+            try
+            {
+                var oldMovie = await _repository.GetById(id);
+                if (oldMovie == null) NotFound("Couldnt not find");
+
+
+                _mapper.Map(movie, oldMovie);
+                if (await _repository.SaveChangesAsync())
+                {
+                    return _mapper.Map<MovieModel>(oldMovie);
+                }
+            }
+            catch
+            {
+                return BadRequest("DataBase Failure");
+            }
+            return BadRequest();
         }
 
         // // Api/Movie/{id} Delete
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            //try
+            //{
+                var Movie = _repository.GetById(id);
+                if (Movie == null) return NotFound();
+
+                _repository.Delete(Movie);
+
+                if(await _repository.SaveChangesAsync())
+                {
+                    return Ok();
+                }
+                
+
+            /*}
+            catch
+            {
+                return BadRequest("DataBase Failure");
+            }*/
+            return BadRequest("Fungerade inte");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Filmstudion.Data;
 using Filmstudion.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,10 @@ namespace Filmstudion.Repositories
     public class MovieRepository : IMovieRepository
     {
         private readonly AppDbContext _context;
-        public MovieRepository(AppDbContext context)
+        private readonly ILogger<MovieRepository> _logger;
+        public MovieRepository(AppDbContext context, ILogger<MovieRepository> logger)
         {
+            _logger = logger;
             _context = context;
         }
         public async Task<Movie> Create (Movie movie)
@@ -27,19 +30,24 @@ namespace Filmstudion.Repositories
         }
         public async Task<Movie> GetById(int id)
         {
-            return await _context.Movies.FindAsync(id);
+            IQueryable<Movie> query = _context.Movies;
+
+            query = query.Where(c => c.id == id);
+
+            return await query.FirstOrDefaultAsync();
         }
-        
-        public async Task Update(Movie movie)
+         
+        public void Delete<T>(T entity) where T : class
         {
-            _context.Entry(movie).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Removing an object of type {entity.GetType()} to the context.");
+            _context.Remove(entity);
         }
-        public async Task Delete(int id)
+        public async Task<bool> SaveChangesAsync()
         {
-            var FindMovie = await _context.Movies.FindAsync(id);
-            _context.Movies.Remove(FindMovie);
-            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Attempitng to save the changes in the context");
+
+            // Only return success if at least one row was changed
+            return (await _context.SaveChangesAsync()) > 0;
         }
 
     }
