@@ -34,6 +34,7 @@ namespace Filmstudion
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddControllers();
             services.AddScoped<IMovieRepository, MovieRepository>();
+            services.AddScoped<IMovieCoRepository, MovieCoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

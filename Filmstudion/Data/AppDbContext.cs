@@ -10,6 +10,7 @@ namespace Filmstudion.Data
     public class AppDbContext : DbContext
     {
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<MovieCo> MovieCos { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -39,6 +40,28 @@ namespace Filmstudion.Data
                 new Movie { id = 6, name = "Star-wars", country = "Sweden", director = "blank", releaseYear = 1992, Borrowed = true }
 
             );
+            builder.Entity<MovieCo>().HasData(
+                new MovieCo
+                {
+                    id = 1,
+                    name = "Universal",
+                    Number = 0767769447,
+                    nameOfCo = "Foo Bar",
+                    email = "Foo.bar@gmail.com",
+                    place = "USA"
+
+                });
+            builder.Entity<MovieCo>().HasData(
+                new MovieCo
+                {
+                    id = 2,
+                    name = "Dreamworks",
+                    Number = 0767723423,
+                    nameOfCo = "John Denver",
+                    email = "John.Denver@gmail.com",
+                    place = "Colombia"
+
+                });
 
         }
     }
