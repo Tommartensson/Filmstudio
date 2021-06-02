@@ -14,32 +14,32 @@ namespace Filmstudion.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MovieController : ControllerBase
+    public class MovieCoController : ControllerBase
     {
-        private readonly IMovieRepository _repository;
+        private readonly IMovieCoRepository _repository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _Link;
 
-            public MovieController(IMovieRepository repository, IMapper mapper, LinkGenerator link)
+        public MovieCoController(IMovieCoRepository repository, IMapper mapper, LinkGenerator link)
         {
             _Link = link;
             _mapper = mapper;
             _repository = repository;
         }
-        // Api/Movie Get
+        // Api/MovieCo Get
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> Get()
+        public async Task<ActionResult<IEnumerable<MovieCo>>> Get()
         {
 
-           try
-            { 
+            try
+            {
                 var results = _repository.Get();
 
-            
+
 
 
                 return Ok(results);
-           }
+            }
             catch
             {
                 return BadRequest("DataBase Failure");
@@ -61,23 +61,23 @@ namespace Filmstudion.Controllers
             {
                 return BadRequest("DataBase Failure");
             }
-           
+
         }
 
         // Api/Movie Post
         [HttpPost]
-        public async Task<ActionResult<MovieModel>> Post([FromBody] MovieModel model)
+        public async Task<ActionResult<MovieCoModel>> Post([FromBody] MovieCoModel model)
         {
             try
             {
-                var location = _Link.GetPathByAction("Get", "Movie", new { name = model.name });
+                var location = _Link.GetPathByAction("Get", "MovieCo", new { name =  model.name});
                 if (string.IsNullOrWhiteSpace(location))
                 {
                     return BadRequest("Couldnt use current name");
                 }
-                var movie = _mapper.Map<Movie>(model);
-                await _repository.Create(movie);
-                return Created("", _mapper.Map<MovieModel>(movie));
+                var movieCo = _mapper.Map<MovieCo>(model);
+                await _repository.Create(movieCo);
+                return Created("", _mapper.Map<MovieCoModel>(movieCo));
             }
             catch
             {
@@ -87,18 +87,18 @@ namespace Filmstudion.Controllers
 
         // Api/Movie/{id} Put/Patch
         [HttpPut("{id}")]
-        public async Task<ActionResult<MovieModel>> Put(int id, [FromBody] MovieModel movie)
+        public async Task<ActionResult<MovieCoModel>> Put(int id, [FromBody] MovieCoModel movie)
         {
             try
             {
-                var oldMovie = await _repository.GetById(id);
-                if (oldMovie == null) NotFound("Couldnt not find");
+                var oldMovieCo = await _repository.GetById(id);
+                if (oldMovieCo == null) NotFound("Couldnt not find");
 
 
-                _mapper.Map(movie, oldMovie);
+                _mapper.Map(movie, oldMovieCo);
                 if (await _repository.SaveChangesAsync())
                 {
-                    return _mapper.Map<MovieModel>(oldMovie);
+                    return _mapper.Map<MovieCoModel>(oldMovieCo);
                 }
             }
             catch
@@ -114,16 +114,16 @@ namespace Filmstudion.Controllers
         {
             //try
             //{
-                var Movie = _repository.GetById(id);
-                if (Movie == null) return NotFound();
+            var Movie = _repository.GetById(id);
+            if (Movie == null) return NotFound();
 
-                _repository.Delete(Movie);
+            _repository.Delete(Movie);
 
-                if(await _repository.SaveChangesAsync())
-                {
-                    return Ok();
-                }
-                
+            if (await _repository.SaveChangesAsync())
+            {
+                return Ok();
+            }
+
 
             /*}
             catch
