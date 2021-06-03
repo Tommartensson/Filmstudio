@@ -2,6 +2,8 @@
 using Filmstudion.Entities;
 using Filmstudion.Models;
 using Filmstudion.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -14,6 +16,7 @@ namespace Filmstudion.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MovieController : ControllerBase
     {
         private readonly IMovieRepository _repository;
@@ -27,6 +30,7 @@ namespace Filmstudion.Controllers
             _repository = repository;
         }
         // Api/Movie Get
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> Get()
         {
@@ -132,5 +136,7 @@ namespace Filmstudion.Controllers
             }*/
             return BadRequest("Fungerade inte");
         }
+
+       
     }
 }

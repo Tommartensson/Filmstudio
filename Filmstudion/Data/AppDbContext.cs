@@ -1,4 +1,6 @@
 ﻿using Filmstudion.Entities;
+using Filmstudion.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Filmstudion.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<MovieCoModel>
     {
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieCo> MovieCos { get; set; }
@@ -45,9 +47,10 @@ namespace Filmstudion.Data
                 {
                     id = 1,
                     name = "Universal",
+                    Password = "Un1versal!",
                     Number = 0767769447,
                     nameOfCo = "Foo Bar",
-                    email = "Foo.bar@gmail.com",
+                    //Email = "Foo.bar@gmail.com",
                     place = "USA"
 
                 });
@@ -56,9 +59,10 @@ namespace Filmstudion.Data
                 {
                     id = 2,
                     name = "Dreamworks",
+                    Password = "Dr3amW0rks!",
                     Number = 0767723423,
                     nameOfCo = "John Denver",
-                    email = "John.Denver@gmail.com",
+                    //Email = "John.Denver@gmail.com",
                     place = "Colombia"
 
                 });
