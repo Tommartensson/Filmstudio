@@ -38,7 +38,8 @@ namespace Filmstudion
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity<AdminModel, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
 
             services.AddAuthentication()
                 .AddCookie()
@@ -57,7 +58,7 @@ namespace Filmstudion
             services.AddControllers();
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IMovieCoRepository, MovieCoRepository>();
-            services.AddScoped<UserManager<AdminModel>>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
