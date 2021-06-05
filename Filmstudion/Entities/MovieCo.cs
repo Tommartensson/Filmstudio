@@ -9,6 +9,7 @@ namespace Filmstudion.Entities
 {
     public class MovieCo
     {
+        [Key]
         public int id { get; set; }
        
         [Required]
@@ -22,7 +23,7 @@ namespace Filmstudion.Entities
         {
             get; set;
         }
-        
+        public string Email { get; set; }
         public int Number { get; set; }
         
         

@@ -7,20 +7,21 @@ using System.Threading.Tasks;
 
 namespace Filmstudion.Models
 {
-    public class MovieCoModel : IdentityUser
+    public class MovieCoModel
     {
         
         [Required]
         public string name { get; set; }
+
+        public string Password { get; set; }
         
         public string place
         {
             get; set;
         }
-        [Required]
-        public string Password { get; set; }
+        
         public int Number { get; set; }
-        //public string email { get; set; }
+        public string Email { get; set; }
         public string nameOfCo { get; set; }
     }
 }

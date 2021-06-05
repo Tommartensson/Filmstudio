@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Filmstudion.Models
 {
-    public class LoginModel
+    public class AdminModel : IdentityUser
     {
+ 
         [Required]
-        public string Username;
+        public string name { get; set; }
         [Required]
-        public string Password;
+        public string password { get; set; }
         
     }
 }

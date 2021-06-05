@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Filmstudion.Entities;
 using Filmstudion.Models;
 using Filmstudion.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -22,28 +23,62 @@ namespace Filmstudion.Controllers
     public class AuthenticationController : ControllerBase
     {
  
-        private readonly SignInManager<MovieCoModel> _sign;
-        private readonly UserManager<MovieCoModel> _userCo;
+        private readonly SignInManager<AdminModel> _sign;
+        private readonly UserManager<AdminModel> _userCo;
         private readonly IConfiguration _config;
 
         public AuthenticationController(
-            SignInManager<MovieCoModel> sign,
-            UserManager<MovieCoModel> userCo,
+            SignInManager<AdminModel> sign,
+            UserManager<AdminModel> userCo,
             IConfiguration config)
         {
             _sign = sign;
             _userCo = userCo;
             _config = config;
         }
-        public async Task<IActionResult> CreateToken([FromBody] MovieCoModel model)
+
+        
+        [Route("CreateAdmin")]
+        [HttpPost]
+        public async Task<ActionResult> CreateAdmin([FromBody] AdminModel Adminmodel)
         {
 
+            AdminModel admin = new AdminModel()
+            {
+                name = Adminmodel.name,
+                password = Adminmodel.password
+            };
+            var snabel = await _userCo.CreateAsync(admin, admin.password);
+            if (!snabel.Succeeded)
+            {
+                throw new InvalidOperationException("Kan inte lägga till admin");
+            }
+            return Ok("Admin skapad");
+            
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateToken([FromBody] AdminModel model)
+        {
+     
+
+            AdminModel admin = new AdminModel()
+            {
+                name = model.name,
+                password = model.password
+            };
+            var snabel = await _userCo.CreateAsync(admin, model.password);
+            if (snabel != IdentityResult.Success)
+            {
+                throw new InvalidOperationException("Kan inte lägga till admin");
+            }
             if (ModelState.IsValid)
             {
                 var user = await _userCo.FindByNameAsync(model.name);
                 if (user != null)
                 {
-                    var result = await _sign.CheckPasswordSignInAsync(user, model.Password, false);
+                    var result = await _sign.CheckPasswordSignInAsync(user, model.password, true);
 
                     if (result.Succeeded)
                     {

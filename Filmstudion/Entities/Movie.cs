@@ -14,6 +14,6 @@ namespace Filmstudion.Entities
         public string country { get; set; }
         public string director { get; set; }
 
-        public bool Borrowed { get; set; }
+        public int Loanable { get; set; }
     }
 }
