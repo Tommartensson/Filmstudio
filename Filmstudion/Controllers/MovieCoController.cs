@@ -25,23 +25,18 @@ namespace Filmstudion.Controllers
         private readonly IMovieCoRepository _repository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _Link;
-        private readonly SignInManager<MovieCoModel> _sign;
-        private readonly UserManager<MovieCoModel> _userCo;
-        private readonly IConfiguration _config;
+       
+ 
 
         public MovieCoController(IMovieCoRepository repository,
             IMapper mapper,
-            LinkGenerator link,
-            SignInManager<MovieCoModel> sign,
-            UserManager<MovieCoModel> userCo,
-            IConfiguration config)
+            LinkGenerator link
+            )
         {
             _Link = link;
             _mapper = mapper;
             _repository = repository;
-            _sign = sign;
-            _userCo = userCo;
-            _config = config;
+            
         }
         // Api/MovieCo Get
         [HttpGet]

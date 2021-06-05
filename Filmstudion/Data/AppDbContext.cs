@@ -1,5 +1,6 @@
 ﻿using Filmstudion.Entities;
 using Filmstudion.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace Filmstudion.Data
 {
-    public class AppDbContext : IdentityDbContext<MovieCoModel>
+    public class AppDbContext : IdentityDbContext<Admin>
     {
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieCo> MovieCos { get; set; }
+        public DbSet<Admin> Admin { get; set; }
+   
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -50,7 +53,7 @@ namespace Filmstudion.Data
                     Password = "Un1versal!",
                     Number = 0767769447,
                     nameOfCo = "Foo Bar",
-                    //Email = "Foo.bar@gmail.com",
+                    Email = "Foo.bar@gmail.com",
                     place = "USA"
 
                 });
@@ -62,10 +65,23 @@ namespace Filmstudion.Data
                     Password = "Dr3amW0rks!",
                     Number = 0767723423,
                     nameOfCo = "John Denver",
-                    //Email = "John.Denver@gmail.com",
+                    Email = "John.Denver@gmail.com",
                     place = "Colombia"
 
                 });
+
+            builder.Entity<IdentityRole>().HasData(
+                new Admin
+                {
+                    UserName = "Snabel",
+                    password = "P@ssW0rd!",
+                    Email = "Snabel.Snabelsson@gmail.com",
+                    
+
+                });
+          
+
+           
 
         }
     }

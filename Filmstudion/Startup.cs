@@ -25,7 +25,7 @@ namespace Filmstudion
 {
     public class Startup
     {
-        private string _config;
+        
 
         public Startup(IConfiguration configuration)
         {
@@ -37,7 +37,10 @@ namespace Filmstudion
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<MovieCoModel, IdentityRole>()
+            services.AddIdentity<Admin, IdentityRole>(cfg => {
+               
+            }
+            )
                 .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddAuthentication()
@@ -57,6 +60,7 @@ namespace Filmstudion
             services.AddControllers();
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IMovieCoRepository, MovieCoRepository>();
+            services.AddScoped<UserManager<Admin>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
