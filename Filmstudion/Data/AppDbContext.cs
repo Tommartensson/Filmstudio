@@ -10,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace Filmstudion.Data
 {
-    public class AppDbContext : IdentityDbContext<Admin>
+    public class AppDbContext : IdentityDbContext<AdminModel>
     {
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieCo> MovieCos { get; set; }
-        public DbSet<Admin> Admin { get; set; }
    
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -29,7 +28,7 @@ namespace Filmstudion.Data
             builder.Entity<Movie>().ToTable("Movies");
             builder.Entity<Movie>().HasKey(p => p.id);
             builder.Entity<Movie>().Property(p => p.id).IsRequired();
-            builder.Entity<Movie>().Property(p => p.Borrowed).IsRequired();
+            builder.Entity<Movie>().Property(p => p.Loanable).IsRequired();
             builder.Entity<Movie>().Property(p => p.name);
             builder.Entity<Movie>().Property(p => p.releaseYear);
             builder.Entity<Movie>().Property(p => p.country);
@@ -37,12 +36,12 @@ namespace Filmstudion.Data
 
             builder.Entity<Movie>().HasData
                 (
-                new Movie { id = 1, name = "LoR", country = "Sweden", director = "blank", releaseYear = 1998, Borrowed = false },
-                new Movie { id = 2, name = "Transformers", country = "Sweden", director = "blank", releaseYear = 2000, Borrowed = false },
-                new Movie { id = 3, name = "Ted", country = "Sweden", director = "blank", releaseYear = 1472, Borrowed = false },
-                new Movie { id = 4, name = "Backstage", country = "Sweden", director = "blank", releaseYear = 1990, Borrowed = true },
-                new Movie { id = 5, name = "TMNT", country = "Sweden", director = "blank", releaseYear = 1991, Borrowed = false },
-                new Movie { id = 6, name = "Star-wars", country = "Sweden", director = "blank", releaseYear = 1992, Borrowed = true }
+                new Movie { id = 1, name = "LoR", country = "Sweden", director = "blank", releaseYear = 1998, Loanable = 20 },
+                new Movie { id = 2, name = "Transformers", country = "Sweden", director = "blank", releaseYear = 2000, Loanable = 20 },
+                new Movie { id = 3, name = "Ted", country = "Sweden", director = "blank", releaseYear = 1472, Loanable = 2 },
+                new Movie { id = 4, name = "Backstage", country = "Sweden", director = "blank", releaseYear = 1990, Loanable = 13 },
+                new Movie { id = 5, name = "TMNT", country = "Sweden", director = "blank", releaseYear = 1991, Loanable = 12 },
+                new Movie { id = 6, name = "Star-wars", country = "Sweden", director = "blank", releaseYear = 1992, Loanable = 9 }
 
             );
             builder.Entity<MovieCo>().HasData(
@@ -71,7 +70,7 @@ namespace Filmstudion.Data
                 });
 
             builder.Entity<IdentityRole>().HasData(
-                new Admin
+                new AdminModel
                 {
                     UserName = "Snabel",
                     password = "P@ssW0rd!",

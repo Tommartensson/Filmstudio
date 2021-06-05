@@ -23,13 +23,13 @@ namespace Filmstudion.Controllers
     public class AuthenticationController : ControllerBase
     {
  
-        private readonly SignInManager<Admin> _sign;
-        private readonly UserManager<Admin> _userCo;
+        private readonly SignInManager<AdminModel> _sign;
+        private readonly UserManager<AdminModel> _userCo;
         private readonly IConfiguration _config;
 
         public AuthenticationController(
-            SignInManager<Admin> sign,
-            UserManager<Admin> userCo,
+            SignInManager<AdminModel> sign,
+            UserManager<AdminModel> userCo,
             IConfiguration config)
         {
             _sign = sign;
@@ -37,22 +37,23 @@ namespace Filmstudion.Controllers
             _config = config;
         }
 
-        [HttpPost]
+        
         [Route("CreateAdmin")]
-        public async Task<ActionResult<AdminModel>> CreateAdmin([FromBody] AdminModel model)
+        [HttpPost]
+        public async Task<ActionResult> CreateAdmin([FromBody] AdminModel Adminmodel)
         {
 
-            Admin admin = new Admin()
+            AdminModel admin = new AdminModel()
             {
-                Username = model.Username,
-                password = model.password
+                name = Adminmodel.name,
+                password = Adminmodel.password
             };
             var snabel = await _userCo.CreateAsync(admin, admin.password);
-            if (snabel != IdentityResult.Success)
+            if (!snabel.Succeeded)
             {
                 throw new InvalidOperationException("Kan inte lägga till admin");
             }
-            return Ok();
+            return Ok("Admin skapad");
             
             
         }
@@ -60,12 +61,11 @@ namespace Filmstudion.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] AdminModel model)
         {
-            model.Username = "Snabel";
-            model.password = "P@ssW0rd!";
+     
 
-            Admin admin = new Admin()
+            AdminModel admin = new AdminModel()
             {
-                Username = model.Username,
+                name = model.name,
                 password = model.password
             };
             var snabel = await _userCo.CreateAsync(admin, model.password);
@@ -75,7 +75,7 @@ namespace Filmstudion.Controllers
             }
             if (ModelState.IsValid)
             {
-                var user = await _userCo.FindByNameAsync(model.Username);
+                var user = await _userCo.FindByNameAsync(model.name);
                 if (user != null)
                 {
                     var result = await _sign.CheckPasswordSignInAsync(user, model.password, true);
@@ -84,9 +84,9 @@ namespace Filmstudion.Controllers
                     {
                         var claims = new[]
                         {
-                            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                            new Claim(JwtRegisteredClaimNames.Sub, user.name),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            new Claim(JwtRegisteredClaimNames.UniqueName, user.Username)
+                            new Claim(JwtRegisteredClaimNames.UniqueName, user.name)
                         };
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Token:Key"]));
 

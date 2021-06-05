@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Filmstudion.Entities
 {
-    public class Admin : IdentityUser
+    public class Admin
     {
         
-        public string Username;
+        public string Username { get; set; }
         
-        public string password;
-        
-        public int Number;
+        public string password { get; set; }
+
+        public int Number { get; set; }
     }
 }
