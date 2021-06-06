@@ -48,10 +48,10 @@ namespace Filmstudion.Controllers
                 UserName = Adminmodel.UserName,
                 password = Adminmodel.password
             };
-            var snabel = await _userCo.CreateAsync(admin, admin.password);
-            if (!snabel.Succeeded)
+            var create = await _userCo.CreateAsync(admin, admin.password);
+            if (!create.Succeeded)
             {
-                return BadRequest(snabel);
+                return BadRequest(create);
             }
             return Created("", "Admin skapad");
             
