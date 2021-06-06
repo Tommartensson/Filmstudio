@@ -17,6 +17,6 @@ namespace Filmstudion.Models
         [Required]
         public string director { get; set; }
         [Required]
-        public bool Borrowed { get; set; }
+        public int Loanable { get; set; }
     }
 }

@@ -31,7 +31,9 @@ namespace Filmstudion.Controllers
         }
         // Api/Movie Get
         
+        
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Movie>>> Get()
         {
 
@@ -39,7 +41,7 @@ namespace Filmstudion.Controllers
             { 
                 var results = _repository.Get();
 
-            
+                if (results == null) return NotFound();
 
 
                 return Ok(results);
@@ -52,6 +54,7 @@ namespace Filmstudion.Controllers
 
         // Api/Movie/{id} Get
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<string> Get(int id)
         {
             try
@@ -70,6 +73,7 @@ namespace Filmstudion.Controllers
 
         // Api/Movie Post
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<MovieModel>> Post([FromBody] MovieModel model)
         {
             try
@@ -90,6 +94,7 @@ namespace Filmstudion.Controllers
         }
 
         // Api/Movie/{id} Put/Patch
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<MovieModel>> Put(int id, [FromBody] MovieModel movie)
         {
@@ -111,31 +116,7 @@ namespace Filmstudion.Controllers
             }
             return BadRequest();
         }
-
-        // // Api/Movie/{id} Delete
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            //try
-            //{
-                var Movie = _repository.GetById(id);
-                if (Movie == null) return NotFound();
-
-                _repository.Delete(Movie);
-
-                if(await _repository.SaveChangesAsync())
-                {
-                    return Ok();
-                }
-                
-
-            /*}
-            catch
-            {
-                return BadRequest("DataBase Failure");
-            }*/
-            return BadRequest("Fungerade inte");
-        }
+        
 
        
     }
