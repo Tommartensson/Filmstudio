@@ -45,15 +45,15 @@ namespace Filmstudion.Controllers
 
             AdminModel admin = new AdminModel()
             {
-                name = Adminmodel.name,
+                UserName = Adminmodel.UserName,
                 password = Adminmodel.password
             };
             var snabel = await _userCo.CreateAsync(admin, admin.password);
             if (!snabel.Succeeded)
             {
-                throw new InvalidOperationException("Kan inte lägga till admin");
+                return BadRequest(snabel);
             }
-            return Ok("Admin skapad");
+            return Created("", "Admin skapad");
             
             
         }
@@ -61,21 +61,9 @@ namespace Filmstudion.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] AdminModel model)
         {
-     
-
-            AdminModel admin = new AdminModel()
-            {
-                name = model.name,
-                password = model.password
-            };
-            var snabel = await _userCo.CreateAsync(admin, model.password);
-            if (snabel != IdentityResult.Success)
-            {
-                throw new InvalidOperationException("Kan inte lägga till admin");
-            }
             if (ModelState.IsValid)
             {
-                var user = await _userCo.FindByNameAsync(model.name);
+                var user = await _userCo.FindByNameAsync(model.UserName);
                 if (user != null)
                 {
                     var result = await _sign.CheckPasswordSignInAsync(user, model.password, true);
@@ -84,16 +72,16 @@ namespace Filmstudion.Controllers
                     {
                         var claims = new[]
                         {
-                            new Claim(JwtRegisteredClaimNames.Sub, user.name),
+                            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            new Claim(JwtRegisteredClaimNames.UniqueName, user.name)
+                            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
                         };
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Token:Key"]));
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
 
                         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                        var token = new JwtSecurityToken(_config["Token:Issuer"],
-                            _config["Token:Audience"],
+                        var token = new JwtSecurityToken(_config["Tokens:Issuer"],
+                            _config["Tokens:Audience"],
                             claims,
                             signingCredentials: creds,
                             expires: DateTime.UtcNow.AddMinutes(20));

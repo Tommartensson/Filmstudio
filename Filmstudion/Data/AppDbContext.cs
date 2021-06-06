@@ -68,16 +68,6 @@ namespace Filmstudion.Data
                     place = "Colombia"
 
                 });
-
-            builder.Entity<IdentityRole>().HasData(
-                new AdminModel
-                {
-                    UserName = "Snabel",
-                    password = "P@ssW0rd!",
-                    Email = "Snabel.Snabelsson@gmail.com",
-                    
-
-                });
           
 
            

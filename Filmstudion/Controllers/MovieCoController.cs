@@ -2,6 +2,8 @@
 using Filmstudion.Entities;
 using Filmstudion.Models;
 using Filmstudion.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,7 @@ namespace Filmstudion.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MovieCoController : ControllerBase
     {
         private readonly IMovieCoRepository _repository;
@@ -39,6 +42,7 @@ namespace Filmstudion.Controllers
             
         }
         // Api/MovieCo Get
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieCo>>> Get()
         {
@@ -58,7 +62,8 @@ namespace Filmstudion.Controllers
             }
         }
 
-        // Api/Movie/{id} Get
+        // Api/MovieCo/{id} Get
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
@@ -77,6 +82,7 @@ namespace Filmstudion.Controllers
         }
 
         // Api/Movie Post
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<MovieCoModel>> Post([FromBody] MovieCoModel model)
         {
@@ -98,6 +104,7 @@ namespace Filmstudion.Controllers
         }
 
         // Api/Movie/{id} Put/Patch
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<MovieCoModel>> Put(int id, [FromBody] MovieCoModel movie)
         {
@@ -120,30 +127,7 @@ namespace Filmstudion.Controllers
             return BadRequest();
         }
 
-        // // Api/Movie/{id} Delete
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            //try
-            //{
-            var Movie = _repository.GetById(id);
-            if (Movie == null) return NotFound();
-
-            _repository.Delete(Movie);
-
-            if (await _repository.SaveChangesAsync())
-            {
-                return Ok();
-            }
-
-
-            /*}
-            catch
-            {
-                return BadRequest("DataBase Failure");
-            }*/
-            return BadRequest("Fungerade inte");
-        }
+        
         
     }
 }

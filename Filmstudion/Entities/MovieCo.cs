@@ -28,5 +28,6 @@ namespace Filmstudion.Entities
         
         
         public string nameOfCo { get; set; }
+        public Movie MyMovies { get; set; }
     }
 }
