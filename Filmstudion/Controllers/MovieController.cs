@@ -33,6 +33,7 @@ namespace Filmstudion.Controllers
         
         
         [HttpGet]
+        
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Movie>>> Get()
         {
@@ -73,7 +74,7 @@ namespace Filmstudion.Controllers
 
         // Api/Movie Post
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<MovieModel>> Post([FromBody] MovieModel model)
         {
             try
@@ -94,7 +95,7 @@ namespace Filmstudion.Controllers
         }
 
         // Api/Movie/{id} Put/Patch
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<MovieModel>> Put(int id, [FromBody] MovieModel movie)
         {

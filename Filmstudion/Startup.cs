@@ -40,7 +40,6 @@ namespace Filmstudion
             services.AddIdentity<AdminModel, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
-
             services.AddAuthentication()
                 .AddCookie()
                 .AddJwtBearer(
@@ -72,7 +71,7 @@ namespace Filmstudion
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
 

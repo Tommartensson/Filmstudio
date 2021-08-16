@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,6 @@ namespace Filmstudion.Entities
         public int releaseYear { get; set; }
         public string country { get; set; }
         public string director { get; set; }
-
         public int Loanable { get; set; }
     }
 }

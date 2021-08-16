@@ -14,6 +14,8 @@ namespace Filmstudion.Models
         public string name { get; set; }
         [Required]
         public string password { get; set; }
+
+        public bool isAdmin { get; set; }
         
     }
 }

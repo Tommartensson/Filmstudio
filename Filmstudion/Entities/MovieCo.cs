@@ -23,7 +23,7 @@ namespace Filmstudion.Entities
         {
             get; set;
         }
-        public string Email { get; set; }
+        public string mail { get; set; }
         public int Number { get; set; }
         
         

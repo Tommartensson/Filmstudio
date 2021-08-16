@@ -46,13 +46,18 @@ namespace Filmstudion.Controllers
             AdminModel admin = new AdminModel()
             {
                 UserName = Adminmodel.UserName,
-                password = Adminmodel.password
+                password = Adminmodel.password,
+                isAdmin = true,
             };
             var create = await _userCo.CreateAsync(admin, admin.password);
+           
+           
+  
             if (!create.Succeeded)
             {
                 return BadRequest(create);
             }
+            
             return Created("", "Admin skapad");
             
             
@@ -70,29 +75,41 @@ namespace Filmstudion.Controllers
 
                     if (result.Succeeded)
                     {
-                        var claims = new[]
+                        if (user.isAdmin == true)
                         {
+                            var claims = new[]
+                            {
                             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                            new Claim("role", "Admin")
+
                         };
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
 
-                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
 
-                        var token = new JwtSecurityToken(_config["Tokens:Issuer"],
-                            _config["Tokens:Audience"],
-                            claims,
-                            signingCredentials: creds,
-                            expires: DateTime.UtcNow.AddMinutes(20));
-                        return Created("", new
-                        {
-                            token = new JwtSecurityTokenHandler().WriteToken(token),
-                            expiration = token.ValidTo
-                        });
+                            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                            var token = new JwtSecurityToken(_config["Tokens:Issuer"],
+                                _config["Tokens:Audience"],
+                                claims,
+                                signingCredentials: creds,
+                                expires: DateTime.UtcNow.AddMinutes(20));
+                            return Created("", new
+                            {
+                                token = new JwtSecurityTokenHandler().WriteToken(token),
+                                expiration = token.ValidTo
+                            });
+                        }
                     }
+                    else
+                    {
+                        return BadRequest("You are not an Admin!");
+                          
+                    }
+                    
+                
                 }
-
             }
             return BadRequest();
         }

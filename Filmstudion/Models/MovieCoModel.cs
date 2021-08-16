@@ -18,8 +18,9 @@ namespace Filmstudion.Models
             get; set;
         }
         
+        public string password { get; set; }
         public int Number { get; set; }
-        public string Email { get; set; }
+        public string mail { get; set; }
         public string nameOfCo { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace Filmstudion.Data
                     Password = "Un1versal!",
                     Number = 0767769447,
                     nameOfCo = "Foo Bar",
-                    Email = "Foo.bar@gmail.com",
+                    mail = "Foo.bar@gmail.com",
                     place = "USA"
 
                 });
@@ -64,7 +64,7 @@ namespace Filmstudion.Data
                     Password = "Dr3amW0rks!",
                     Number = 0767723423,
                     nameOfCo = "John Denver",
-                    Email = "John.Denver@gmail.com",
+                    mail = "John.Denver@gmail.com",
                     place = "Colombia"
 
                 });
