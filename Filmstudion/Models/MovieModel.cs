@@ -8,6 +8,9 @@ namespace Filmstudion.Models
 {
     public class MovieModel
     {
+        
+        [Key]
+        public int Id { get; set; }
         [Required]
         public string name { get; set; }
         [Required]

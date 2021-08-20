@@ -31,6 +31,7 @@ namespace Filmstudion.Controllers
         private readonly UserManager<AdminModel> _user;
         private readonly SignInManager<AdminModel> _sign;
         private readonly IConfiguration _config;
+        private readonly IMovieRepository _movieRepository;
 
 
 
@@ -39,7 +40,8 @@ namespace Filmstudion.Controllers
             LinkGenerator link,
             UserManager<AdminModel> user,
             SignInManager<AdminModel> sign,
-            IConfiguration config
+            IConfiguration config,
+            IMovieRepository movieRepository
             )
         {
             _Link = link;
@@ -48,6 +50,7 @@ namespace Filmstudion.Controllers
             _user = user;
             _sign = sign;
             _config = config;
+            _movieRepository = movieRepository;
 
         }
         // Api/MovieCo Get
@@ -124,8 +127,84 @@ namespace Filmstudion.Controllers
                 return BadRequest(model);
             }
         }
+        [Route("AddMovie")]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<MovieCo>> AddToMyMovies([FromBody] LoanModel model)
+        {
+            try
+            {
+                var movie = await _movieRepository.GetById(model.movieId);
+                var movieCo = await _repository.GetById(model.movieCoId);
+                if(movie == null)
+                {
+                    return BadRequest("This movie does not exist :)");
+                }
+                if (movieCo == null)
+                {
+                    return BadRequest("This Filmstudio does not exist :)");
+                }
 
-        
+                if (movie.Loanable != 0)
+                {
+                    movieCo.MyMovies.Add(movie);
+                    movie.Loanable = movie.Loanable - 1;
+                    
+                    if (await _repository.SaveChangesAsync())
+                    {
+                        return Created("", movieCo);
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+                }
+              else
+                {
+                    return BadRequest("There are no copies avaiable at the moment");
+                }
+            }
+            catch
+            {
+                return BadRequest(model);
+            }
+        }
+
+        [Route("DeleteMovie")]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<MovieCo>> GiveBackMovie([FromBody] LoanModel model)
+        {
+            try
+            {
+                var movie = await _movieRepository.GetById(model.movieId);
+                var movieCo = await _repository.GetById(model.movieCoId);
+               
+
+                if (movie.Loanable != 0)
+                {
+                    movieCo.MyMovies.Remove(movie);
+
+                   movie.Loanable = movie.Loanable + 1;
+                    if (await _movieRepository.SaveChangesAsync() && await _repository.SaveChangesAsync())
+                    {
+                        return Created("", movie);
+                    }
+                    else
+                    {
+                        return BadRequest("Something didnt check out");
+                    }
+                }
+                else
+                {
+                    return BadRequest("There is no more copies avaialbe at the moment");
+                }
+            }
+            catch
+            {
+                return BadRequest(model);
+            }
+        }
         [Route("CreateToken")]
         [AllowAnonymous]
         [HttpPost]
@@ -169,7 +248,7 @@ namespace Filmstudion.Controllers
                     }
                     else
                     {
-                        return BadRequest("You are not a Filmstudio!");
+                        return Unauthorized("You are not a Filmstudio!");
 
                     }
 

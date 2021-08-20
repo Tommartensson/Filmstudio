@@ -57,6 +57,7 @@ namespace Filmstudion
             services.AddControllers();
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IMovieCoRepository, MovieCoRepository>();
+      
             
         }
 

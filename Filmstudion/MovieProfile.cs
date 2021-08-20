@@ -15,6 +15,7 @@ namespace Filmstudion.Data
             this.CreateMap<Movie, MovieModel>().ReverseMap();
             this.CreateMap<MovieCo, MovieCoModel>().ReverseMap();
             this.CreateMap<Admin, AdminModel>().ReverseMap();
+     
         }
     }
 }

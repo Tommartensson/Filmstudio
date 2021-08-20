@@ -32,7 +32,7 @@ namespace Filmstudion.Repositories
         {
             IQueryable<MovieCo> query = _context.MovieCos;
 
-            query = query.Where(c => c.id == id);
+            query = query.Where(c => c.MovieCoid == id);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -49,5 +49,6 @@ namespace Filmstudion.Repositories
             // Only return success if at least one row was changed
             return (await _context.SaveChangesAsync()) > 0;
         }
+       
     }
 }

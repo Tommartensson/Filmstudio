@@ -13,5 +13,6 @@ namespace Filmstudion.Repositories
         Task<MovieCo> Create(MovieCo movieCo);
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveChangesAsync();
+       
     }
 }

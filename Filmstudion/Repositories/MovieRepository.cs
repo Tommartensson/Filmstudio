@@ -32,7 +32,7 @@ namespace Filmstudion.Repositories
         {
             IQueryable<Movie> query = _context.Movies;
 
-            query = query.Where(c => c.id == id);
+            query = query.Where(c => c.MovieId == id);
 
             return await query.FirstOrDefaultAsync();
         }
