@@ -31,7 +31,7 @@ namespace Filmstudion.Entities
         public string nameOfCo { get; set; }
 
 
-        public List<Movie> MyMovies { get; set; }
+        public ICollection<Movie> MyMovies { get; set; }
 
         public MovieCo()
             {

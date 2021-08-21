@@ -54,7 +54,7 @@ namespace Filmstudion
                     );
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("Filmstudion"));
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddControllers();
+            services.AddControllersWithViews();
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IMovieCoRepository, MovieCoRepository>();
       

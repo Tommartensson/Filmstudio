@@ -51,8 +51,8 @@ namespace Filmstudion.Data
                 new Movie { MovieId = 6, name = "Star-wars", country = "Sweden", director = "blank", releaseYear = 1992, Loanable = 9}
 
             );
-
-            builder.Entity<MovieCo>().HasData(
+            builder.Entity<MovieCo>().HasData
+            (
                 new MovieCo
                 {
                     MovieCoid = 1,
@@ -64,27 +64,22 @@ namespace Filmstudion.Data
                     place = "USA",
                     MyMovies = new List<Movie>
                     {
-                      
+
                     }
-                    
-
-                    
-
                 },
-                new MovieCo
-                {
-                    MovieCoid = 2,
-                    name = "Dreamworks",
-                    Password = "Dr3amW0rks!",
-                    Number = 0767723423,
-                    nameOfCo = "John Denver",
-                    mail = "John.Denver@gmail.com",
-                    place = "Colombia",
-                    
-                }); ;
-          
+            new MovieCo
+            {
+                MovieCoid = 2,
+                name = "Dreamworks",
+                Password = "Dr3amW0rks!",
+                Number = 0767723423,
+                nameOfCo = "John Denver",
+                mail = "John.Denver@gmail.com",
+                place = "Colombia",
 
-           
+            }) ; ;
+
+
 
         }
     }
