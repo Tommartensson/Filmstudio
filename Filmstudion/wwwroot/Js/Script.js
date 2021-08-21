@@ -17,7 +17,7 @@ checkIf.addEventListener("click", function(){
     .then(movieCo => {
         const user = UserName.value
         const pass = Password.value
-        console.log(movieCo.result)
+       
 
         for(let i=0; i<movieCo.result.length; i++)
         {
@@ -25,7 +25,8 @@ checkIf.addEventListener("click", function(){
             {
                 console.log("Det fungerar")
                 main.innerHTML= ""
-                showMovies(movieCo.result.movieCoid);
+                showMovies(movieCo.result[i].movieCoid);
+                
                 break;
             }
             else
@@ -53,22 +54,65 @@ button.addEventListener("click", function() {
     
 })
 
-function showMovies (MovieCoId)
+function showMyMovies(Id)
 {
+    fetch("../api/movieCo")
+    .then(Response => Response.json())
+    .then(data => {
+        
+        if(data.result[Id].myMovies.length != 0)
+            {
+        for(i = 0; data.result[Id].myMovies.length > i; i++)
+        {
+            let myMovies = data.result[i].myMovies
+            main.insertAdjacentHTML("afterbegin", "<div id='"+myMovies.movieId +"'>" + myMovies.name  + "</br>" + myMovies.director  +"</div>" + "</br>")
+        }
+    }
+            else
+            {
+                main.insertAdjacentHTML("afterbegin", "Du har tyvärr inga filmer lånade!")
+            }
+            main.insertAdjacentHTML("afterbegin", "<h1 id=back> Gå tillbaka</div>")
+            let back = document.getElementById("back")
+            back.addEventListener("click", function(){
+                main.innerHTML = "";
+                showMovies(Id);
+            })
+    })
+}
+
+function showMovies (Id)
+{
+    let logout = document.createElement("h1")
+    logout.innerHTML = "Logga ut"
+    main.appendChild(logout)
+    logout.addEventListener("click", function(){
+        location.reload();
+    })
+    
 fetch("../api/movie")
     .then(Response => Response.json())
     .then(data => {
-        console.log(MovieCoId)
+        
+        main.insertAdjacentHTML("afterbegin", "<h1 id=myMovies> Mina filmer </div>")
+        let movies = document.getElementById("myMovies")
+        movies.addEventListener("click", function(){
+            main.innerHTML = ""
+            showMyMovies(Id);
+        })
         for (i = 0; data.result.length > i; i++) 
         {
-            console.log(data.result)
             let button = document.createElement("button")
+            button.setAttribute("id", data.result[i].movieId)
             button.innerHTML = "Låna";
-            main.insertAdjacentHTML("afterbegin", data.result[i].name + "</br>" + data.result[i].director + "</br>" + data.result[i].loanable +"</br>" + "</br>")
+            main.insertAdjacentHTML("afterbegin", "<div id='"+data.result[i].movieId +"'>" + data.result[i].name  + "</br>" + data.result[i].director + "</br>" + data.result[i].loanable +"</div>" + "</br>")
             main.insertAdjacentElement("afterbegin", button)
-            button.addEventListener("click", function(){
-                console.log(data.result.MovieId)
-                let movie = {MovieId : data.result.MovieId, MovieCoId : MovieCoId}
+           
+            button.addEventListener("click", function(event){
+                event.preventDefault()
+                let movieid = parseInt(event.target.id)
+                
+                let movie = {movieId : movieid, movieCoId : Id}
                 fetch("../api/movieCo/AddMovie", {
                     method: "POST",
                     body: JSON.stringify(movie),
