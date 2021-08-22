@@ -44,7 +44,7 @@ namespace Filmstudion.Controllers
 
                 if (results == null) return NotFound();
 
-
+               
                 return Ok(results);
            }
             catch

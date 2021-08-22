@@ -16,9 +16,8 @@ namespace Filmstudion.Models
         [Required]
         public int releaseYear { get; set; }
         [Required]
-        public string country { get; set; }
-        [Required]
         public string director { get; set; }
+       public int Loanable { get; set; }
         
     }
 }
